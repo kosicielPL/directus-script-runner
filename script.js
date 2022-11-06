@@ -79,11 +79,15 @@ async function fixUserAuthorAsync() {
   console.log(usersResponse);
 }
 
-async function getDirectusUsersAsync() {
-  return await axios({
-    url: 'https://api.zpruszkowa.pl/users',
-    method: 'get',
-    headers: { Authorization: `Bearer ${state.accessToken}` }
-  });
+const getDirectusUsersAsync = async () => {
+  try {
+    return await axios({
+      url: 'https://api.zpruszkowa.pl/users',
+      method: 'get',
+      headers: { Authorization: `Bearer ${state.accessToken}` }
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
 }
 // #endregion SCRIPT
