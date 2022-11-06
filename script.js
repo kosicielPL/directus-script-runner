@@ -1,12 +1,11 @@
 // #region UI
+const btnRun = document.getElementById('btn-run');
+const btnClear = document.getElementById('btn-clear');
+const divOutput = document.getElementById('div-output');
+const inputAccessToken = document.getElementById('input-access-token');
+const checkRunUserAuthor = document.getElementById('check-run-user-author');
 
-var btnRun = document.getElementById('btn-run');
-var btnClear = document.getElementById('btn-clear');
-var divOutput = document.getElementById('div-output');
-var inputAccessToken = document.getElementById('input-access-token');
-var checkRunUserAuthor = document.getElementById('check-run-user-author');
-
-var state = {
+const state = {
   accessToken: null,
   scriptRunning: false,
 };
@@ -24,15 +23,15 @@ btnClear.addEventListener('click', function(e) {
   divOutput.innerHTML = null;
 });
 
-function output(message, level) {
-  var paragraph = document.createElement('p');
-  var small = document.createElement('small');
+const output = (message, level) => {
+  const paragraph = document.createElement('p');
+  const small = document.createElement('small');
   paragraph.classList.add('font-monospace');
   paragraph.classList.add('mb-0');
   if (level) {
     paragraph.classList.add('text-' + level.toLowerCase());
   }
-  var text = '> ' + message;
+  const text = '> ' + message;
   small.innerHTML = text;
   paragraph.appendChild(small);
   divOutput.appendChild(paragraph);
@@ -41,7 +40,7 @@ function output(message, level) {
 // #endregion UI
 
 // #region SCRIPT
-async function executeAsync() {
+const executeAsync = async () => {
   try {
     output('<strong>Script execution started</strong>');
     state.scriptRunning = true;
@@ -71,7 +70,7 @@ async function executeAsync() {
   }
 }
 
-async function fixUserAuthorAsync() {
+const fixUserAuthorAsync = async () => {
   output('Running <code>fixUserAuthor</code> script...');
 
   output('Requesting Directus users...');
@@ -81,11 +80,12 @@ async function fixUserAuthorAsync() {
 
 const getDirectusUsersAsync = async () => {
   try {
-    return await axios({
+    const res = await axios({
       url: 'https://api.zpruszkowa.pl/users',
       method: 'get',
       headers: { Authorization: `Bearer ${state.accessToken}` }
     });
+    return res.data;
   } catch (error) {
     throw new Error(error);
   }
