@@ -3,9 +3,21 @@
 var btnRun = document.getElementById('btn-run');
 var btnClear = document.getElementById('btn-clear');
 var divOutput = document.getElementById('div-output');
+var inputAccessToken = document.getElementById('input-access-token');
+var checkRunUserAuthor = document.getElementById('check-run-user-author');
+
+var state = {
+  accessToken: null,
+  scriptRunning: false,
+};
 
 btnRun.addEventListener('click', function(e) {
-  execute();
+  e.preventDefault();
+  if (state.scriptRunning) {
+    output('<strong>Script already set to run. Please wait for its execution to finish and try again</strong>', 'warning');
+  } else {
+    execute();
+  }
 });
 
 btnClear.addEventListener('click', function(e) {
@@ -16,6 +28,7 @@ function output(message, level) {
   var paragraph = document.createElement('p');
   var small = document.createElement('small');
   paragraph.classList.add('font-monospace');
+  paragraph.classList.add('mb-0');
   if (level) {
     paragraph.classList.add('text-' + level.toLowerCase());
   }
@@ -29,20 +42,48 @@ function output(message, level) {
 
 // #region SCRIPT
 function execute() {
-  output('<strong>SCRIPT EXECUTION STARTED</strong>');
-  output('Getting articles...');
-  axios.get('https://api.zpruszkowa.pl/items/articles')
-  .then(function(res) {
-    output('Request succeeded', 'success');
-    output('Check console to view response details');
-    console.log(res);
-  })
-  .catch(function(err) {
-    output('Request failed', 'danger');
-    output(err, 'danger');
-  })
-  .then(function(){
-    output('<strong>SCRIPT EXECUTION FINISHED</strong>');
+  try {
+    output('<strong>Script execution started</strong>');
+    state.scriptRunning = true;
+
+    output('Checking access token...');
+    if (!inputAccessToken.value && !state.accessToken) {
+      throw new Error('Missing access token!');
+    } else if (inputAccessToken.value) {
+      state.accessToken = inputAccessToken.value;
+    }
+
+    if (checkRunUserAuthor.checked) {
+      fixUserAuthorAsync();
+    }
+  } catch (error) {
+    output('Script execution aborted with error', 'danger');
+    if (error.message) {
+      output('Error: ' + error.message, 'danger');
+    } else {
+      output('Error: ' + error, 'danger');
+    }
+    console.log(error);
+    output('View console for more details', 'info');
+  } finally {
+    state.scriptRunning = false;
+    output('<strong>Script execution finished</strong>');
+  }
+}
+
+async function fixUserAuthorAsync() {
+  output('Running <code>fixUserAuthor</code> script...');
+
+  output('Requesting Directus users...');
+  var usersResponse = await getDirectusUsersAsync();
+  console.log(usersResponse);
+}
+
+async function getDirectusUsersAsync() {
+  return await axios({
+    url: 'https://api.zpruszkowa.pl/users',
+    method: 'get',
+    headers: { Authorization: `Bearer ${state.accessToken}` }
   });
 }
 // #endregion SCRIPT

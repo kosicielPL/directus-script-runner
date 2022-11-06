@@ -13,22 +13,44 @@
   <main class="container">
     <section class="row">
       <div class="col">
-        <h1>ImPress Script Runner</h1>
+        <h1>Directus Script Runner</h1>
       </div>
     </section>
-    <section class="row">
-      <div class="d-grid gap-1">
-        <button id="btn-run" type="button" class="btn btn-primary">Run script!</button>
+
+    <form>
+      <div class="row mb-3">
+        <label for="input-access-token" class="col-sm-2 col-form-label">Access Token</label>
+        <div class="col-sm-10">
+          <input type="password" class="form-control" id="input-access-token">
+        </div>
       </div>
-    </section>
+
+      <fieldset class="row mb-3">
+        <legend class="col-form-label col-sm-2 pt-0">Scripts</legend>
+        <div class="col-sm-10">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="check-run-user-author">
+            <label class="form-check-label" for="check-run-user-author">
+              Fix null <code>user_author</code> fields in articles
+            </label>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="row mb-3">
+        <div class="d-grid gap-1">
+          <button id="btn-run" type="submit" class="btn btn-primary">Run</button>
+        </div>
+      </div>
+    </form>
+    
     <section class="row">
       <div class="col">
         <h2>
           Output
           <button id="btn-clear" type="button" class="btn btn-secondary btn-sm">Clear</button>
         </h2>
-        <div id="div-output" class="bg-light" style="height:500px;overflow-y:scroll;">
-
+        <div id="div-output" class="bg-light overflow-auto" style="height:500px;">
         </div>
       </div>
     </section>
