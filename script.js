@@ -75,7 +75,7 @@ const fixUserAuthorAsync = async () => {
   output('Running <code>fixUserAuthor</code> script...');
 
   output('Requesting Directus users...');
-  const directusUsers = await getDirectusUsersAsync();
+  let directusUsers = await getDirectusUsersAsync();
   output(`Request completed. Received ${directusUsers.length} users`);
 }
 
