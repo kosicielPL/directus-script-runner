@@ -11,12 +11,12 @@ var state = {
   scriptRunning: false,
 };
 
-btnRun.addEventListener('click', function(e) {
+btnRun.addEventListener('click', async function(e) {
   e.preventDefault();
   if (state.scriptRunning) {
     output('<strong>Script already set to run. Please wait for its execution to finish and try again</strong>', 'warning');
   } else {
-    execute();
+    await executeAsync();
   }
 });
 
@@ -41,7 +41,7 @@ function output(message, level) {
 // #endregion UI
 
 // #region SCRIPT
-function execute() {
+async function executeAsync() {
   try {
     output('<strong>Script execution started</strong>');
     state.scriptRunning = true;
@@ -54,7 +54,7 @@ function execute() {
     }
 
     if (checkRunUserAuthor.checked) {
-      fixUserAuthorAsync();
+      await fixUserAuthorAsync();
     }
   } catch (error) {
     output('Script execution aborted with error', 'danger');
