@@ -75,8 +75,7 @@ const fixUserAuthorAsync = async () => {
   output('Running <code>fixUserAuthor</code> script...');
 
   output('Requesting Directus users...');
-  var usersResponse = await getDirectusUsersAsync();
-  console.log(usersResponse);
+  const users = await getDirectusUsersAsync();
 }
 
 const getDirectusUsersAsync = async () => {
