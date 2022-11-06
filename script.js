@@ -35,6 +35,7 @@ const output = (message, level) => {
   small.innerHTML = text;
   paragraph.appendChild(small);
   divOutput.appendChild(paragraph);
+  divOutput.scrollTop = divOutput.scrollHeight;
 }
 
 // #endregion UI
@@ -56,7 +57,7 @@ const executeAsync = async () => {
       await fixUserAuthorAsync();
     }
   } catch (error) {
-    output('Script execution aborted with error', 'danger');
+    output('<strong>Script execution aborted with error</strong>', 'danger');
     if (error.message) {
       output('Error: ' + error.message, 'danger');
     } else {
