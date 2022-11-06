@@ -77,17 +77,19 @@ const fixUserAuthorAsync = async () => {
 
   output('Fetching Directus article authors...');
   const articleAuthors = await getAuthorsAsync();
-  output(`Fetch completed. Received ${articleAuthors.data.length} authors.`);
-  output('Fetching authors data...');
   const authorsKeys = articleAuthors.data.map(d => d.author);
-  authorsKeys.forEach(async (key) => {
+  output(`Fetch completed. Received ${authorsKeys.length} authors.`);
+  
+  output('Fetching authors data and articles...');
+  for (const key of authorsKeys) {
+    output(`Fetching data for author ${key}...`);
     const author = await getAuthorByIdAsync(key);
     const authorArticles = await getArticlesByAuthorIdAsync(author.data.id);
     console.group(`Articles for author ${author.data.id}:`);
     console.log(authorArticles.data);
     console.groupEnd();
-  });
-  output('Fetch completed.');
+    output(`Fetch completed. Received ${authorArticles.data.length} articles.`);
+  }
 };
 
 const getAuthorsAsync = async () => {
@@ -128,4 +130,17 @@ const getAuthorByIdAsync = async (authorId) => {
     throw new Error(error);
   }
 };
+
+const patchArticlesUserAuthor = async(articles, userId) => {
+  try {
+    const res = await axios({
+      url: `https://api.zpruszkowa.pl/items/persons/${authorId}?fields=id,name,owner`,
+      method: 'get',
+      headers: { Authorization: `Bearer ${state.accessToken}` }
+    });
+    return res.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
 // #endregion SCRIPT
